@@ -249,9 +249,8 @@ function displayLoginMessage(message, isError = false) {
     el.id = "login-message";
     document.body.appendChild(el);
   }
+  el.className = isError ? "error" : "success";
   el.textContent = message;
-  el.style.color = isError ? "red" : "green";
-  el.style.fontWeight = "bold";
 }
 
 function showReviewSubmitMessage(message, isError = false) {
@@ -261,7 +260,6 @@ function showReviewSubmitMessage(message, isError = false) {
     el.id = "review-message";
     document.body.appendChild(el);
   }
+  el.className = isError ? "error" : "success";
   el.textContent = message;
-  el.style.color = isError ? "red" : "green";
-  el.style.fontWeight = "bold";
 }

@@ -5,10 +5,16 @@ body {
     color: #333;
 }
 
-h1, h2 {
-    color: #444;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 0.3rem;
+h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 form {
@@ -18,12 +24,16 @@ form {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 label {
     display: block;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     font-weight: bold;
+    color: #333;
 }
 
 input[type="text"],
@@ -37,6 +47,11 @@ textarea {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+    font-size: 1rem;
+}
+
+textarea {
+    resize: vertical;
 }
 
 button {
@@ -46,7 +61,9 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin-top: 0.5rem;
+    margin: 0.5rem 0.25rem 0 0;
+    transition: background-color 0.3s ease;
+    font-size: 1rem;
 }
 
 button:hover {
@@ -78,4 +95,70 @@ nav a {
 
 nav a:hover {
     text-decoration: underline;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+button.edit-review-btn {
+    background-color: #6c757d;
+}
+
+button.edit-review-btn:hover {
+    background-color: #5a6268;
+}
+
+button.delete-review-btn {
+    background-color: #dc3545;
+}
+
+button.delete-review-btn:hover {
+    background-color: #a71d2a;
+}
+
+/* Success and error message styling */
+#login-message,
+#review-message,
+#user-reviews-results .message,
+#book-reviews-results .message,
+#user-reviews-results > div.message,
+#book-reviews-results > div.message {
+    font-weight: bold;
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 4px;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.message {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+}
+
+#login-section {
+    background-color: #fff;
+    padding: 2rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    max-width: 500px;
+    margin: 2rem auto;
+    text-align: left;
 }

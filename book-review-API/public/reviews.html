@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Post a Review</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<nav>
-  <a href="index.html">Login</a>
-  <a href="reviews.html">Reviews</a>
-</nav>
+  <div class="container">
+    <nav>
+      <a href="index.html">Login</a>
+      <a href="reviews.html">Reviews</a>
+    </nav>
+
     <h1>Post a Book Review</h1>
 
     <form id="review-form">
@@ -55,55 +58,8 @@
     </form>
 
     <div id="user-reviews-results"></div>
+  </div>
 
     <script src="main.js" defer></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const bookReviewSearchForm = document.getElementById("book-review-search-form");
-            if (bookReviewSearchForm) {
-                console.log("🎯 Book review form found");
-                bookReviewSearchForm.addEventListener("submit", async function (e) {
-                    e.preventDefault();
-                    console.log("📚 Book review search form submitted");
-
-                    const title = document.getElementById("search-title").value;
-                    const author = document.getElementById("search-author").value;
-
-                    try {
-                        const res = await fetch("/reviews/book", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({ title, author })
-                        });
-
-                        const data = await res.json();
-                        const container = document.getElementById("book-reviews-results");
-                        container.innerHTML = "";
-
-                        if (res.ok && data.length > 0) {
-                            data.forEach(review => {
-                                const div = document.createElement("div");
-                                div.innerHTML = `
-                                    <hr>
-                                    <p><strong>Rating:</strong> ${review.rating}</p>
-                                    <p><strong>Review:</strong> ${review.review_text}</p>
-                                    <p><em>Posted on:</em> ${new Date(review.created_at).toLocaleString()}</p>
-                                `;
-                                container.appendChild(div);
-                            });
-                        } else {
-                            container.textContent = "No reviews found for this book.";
-                        }
-                    } catch (error) {
-                        document.getElementById("book-reviews-results").textContent = "Error fetching reviews.";
-                    }
-                });
-            } else {
-                console.log("❌ Book review form NOT found");
-            }
-        });
-    </script>
 </body>
 </html>
