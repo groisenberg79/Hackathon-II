@@ -3,9 +3,11 @@ const { PORT } = require('./configs/configs.js');
 const session = require('express-session');
 const reviewRouter = require('./routes/reviewRoutes.js');
 const app = express();
+const path = require('path');
 
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: 'superUser123',
     resave: false,

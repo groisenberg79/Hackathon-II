@@ -11,13 +11,13 @@ const {
 const express = require('express');
 const router = express.Router();
 
-router.get('/reviews/book', getAllReviewsByBook);
-router.get('/reviews/user', getAllReviewsByUser);
+router.post('/reviews/book', getAllReviewsByBook);
+router.post('/reviews/user', getAllReviewsByUser);
 router.post('/register', registerUser);
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);
-router.post('/reviews', postReview);
-router.put('/reviews', updateReview);
-router.delete('/reviews', deleteReview);
+router.post('/review', postReview);
+router.put('/review', updateReview);
+router.delete('/review', deleteReview);
 
 module.exports = router;
