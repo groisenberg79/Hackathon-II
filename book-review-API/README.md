@@ -71,8 +71,12 @@ http://localhost:3000
 ## API Routes (Backend)
 
 ### 🟢 POST `/login`
-- Logs a user in by email (no password required for demo).
-- Body: `{ "email": "user@example.com" }`
+ - Logs a user in by email (no password required for demo).
+ - Body: `{ "email": "user@example.com" }`
+
+### 🟢 POST `/logout`
+ - Logs the user out by clearing the session.
+ - No body required.
 
 ### 🟢 POST `/review`
 - Submit a new review.

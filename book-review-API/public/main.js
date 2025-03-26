@@ -106,6 +106,26 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  const logoutBtn = document.getElementById("logout-btn");
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", async () => {
+      try {
+        const res = await fetch("/logout", {
+          method: "POST"
+        });
+
+        if (res.ok) {
+          alert("Logged out successfully.");
+          window.location.href = "index.html";
+        } else {
+          alert("Logout failed.");
+        }
+      } catch (err) {
+        alert("Error during logout.");
+      }
+    });
+  }
 });
 
 async function fetchUserReviews(username) {
