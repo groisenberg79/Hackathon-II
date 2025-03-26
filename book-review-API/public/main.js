@@ -147,7 +147,7 @@ function renderUserReviews(reviews, container) {
     div.innerHTML = `
       <hr>
       <div data-id="${review.id}">
-        <p><strong>Book ID:</strong> ${review.book_id}</p>
+    <p><strong>Book:</strong> ${review.book_title} by ${review.book_author}</p>
         <p><strong>Rating:</strong> <span class="rating">${review.rating}</span></p>
         <p><strong>Review:</strong> <span class="review-text">${review.review_text}</span></p>
         <p><em>Posted on:</em> ${new Date(review.created_at).toLocaleString()}</p>
@@ -175,11 +175,17 @@ function renderUserReviews(reviews, container) {
           body: JSON.stringify({ review_id: reviewId })
         });
 
-        const result = await res.json();
+        let result;
+        try {
+          result = await res.json();
+        } catch {
+          result = {};
+        }
+
         if (res.ok) {
           this.parentElement.remove(); // Remove the review block from the DOM
         } else {
-          alert(result.message || "Failed to delete review.");
+          alert(result.message || "User not authorized to delete this review.");
         }
       } catch (err) {
         alert("Error deleting review.");
@@ -197,7 +203,7 @@ function handleEditReview() {
   const currentText = reviewBlock.querySelector(".review-text").textContent;
 
   reviewBlock.innerHTML = `
-    <p><strong>Book ID:</strong> ${reviewBlock.querySelector("p strong").parentElement.textContent.split(":")[1].trim()}</p>
+    <p><strong>Book:</strong> ${reviewBlock.querySelector("p").textContent.split(":")[1].trim()}</p>
     <label>Rating: <input type="number" class="edit-rating" value="${currentRating}" min="1" max="5"></label><br>
     <label>Review: <textarea class="edit-text">${currentText}</textarea></label><br>
     <button class="save-review-btn" data-id="${reviewId}">Save</button>
@@ -223,19 +229,26 @@ async function handleSaveReview(e) {
       }),
     });
 
-    const result = await res.json();
+    let result;
+    try {
+      result = await res.json();
+    } catch {
+      result = {};
+    }
+
     if (res.ok) {
       block.innerHTML = `
-        <p><strong>Book ID:</strong> ${block.querySelector("p").textContent.split(":")[1].trim()}</p>
+        <p><strong>Book:</strong> ${block.querySelector("p").textContent.split(":")[1].trim()}</p>
         <p><strong>Rating:</strong> <span class="rating">${newRating}</span></p>
         <p><strong>Review:</strong> <span class="review-text">${newReview}</span></p>
         <p><em>Updated just now</em></p>
         <button class="edit-review-btn">Edit</button>
-        <button class="delete-review-btn">Delete</button>
+        <button class="delete-review-btn" data-id="${reviewId}">Delete</button>
       `;
       block.querySelector(".edit-review-btn").addEventListener("click", handleEditReview);
+      block.querySelector(".delete-review-btn").addEventListener("click", renderUserReviews);
     } else {
-      alert(result.message || "Failed to update review.");
+      alert(result.message || "User not authorized to update this review.");
     }
   } catch (error) {
     alert("Error updating review.");

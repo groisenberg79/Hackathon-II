@@ -14,7 +14,8 @@ const allReviewsQuery = (title, author) => {
 const UserReviewsQuery = (username) => {
     return database('reviews')
         .join('users', 'reviews.user_id', '=', 'users.id')
-        .select('reviews.*')
+        .join('books', 'reviews.book_id', '=', 'books.id')
+        .select('reviews.*', 'books.title as book_title', 'books.author as book_author')
         .where('users.username', username);
 }
 
