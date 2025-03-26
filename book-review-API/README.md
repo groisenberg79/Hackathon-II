@@ -61,7 +61,7 @@ node server.js
 6. Visit the app:
 
 ```
-http://localhost:3000
+http://localhost:3000/index.html
 ```
 
 > **Note:** Make sure the backend is running before interacting with the frontend.
