@@ -187,3 +187,124 @@ function showReviewSubmitMessage(message, isError = false) {
   el.className = isError ? "error" : "success";
   el.textContent = message;
 }
+
+async function fetchUserReviews(username) {
+  console.log("Fetching reviews for username:", username);
+  const container = document.getElementById("user-reviews-results");
+  container.innerHTML = "";
+
+  try {
+    const res = await fetch("/reviews/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await res.json();
+
+    if (res.ok && data.length > 0) {
+      data.forEach(review => {
+        const block = document.createElement("div");
+        block.classList.add("review-block");
+        block.innerHTML = `
+          <p><strong>Book:</strong> ${review.book_title} by ${review.book_author}</p>
+          <p><strong>Rating:</strong> <span class="rating">${review.rating}</span></p>
+          <p><strong>Review:</strong> <span class="review-text">${review.review_text}</span></p>
+          <p><em>Posted on:</em> ${new Date(review.created_at).toLocaleString()}</p>
+          <button class="edit-review-btn" data-id="${review.id}">Edit</button>
+          <button class="delete-review-btn" data-id="${review.id}">Delete</button>
+        `;
+        container.appendChild(block);
+
+        block.querySelector(".edit-review-btn").addEventListener("click", handleEditReview);
+        block.querySelector(".delete-review-btn").addEventListener("click", handleDeleteReview);
+      });
+    } else {
+      container.textContent = "No reviews found for this user.";
+    }
+  } catch (err) {
+    console.error("Error fetching user reviews:", err);
+    container.textContent = "Error fetching user reviews.";
+  }
+}
+
+function handleEditReview(e) {
+  const block = e.target.closest(".review-block");
+  const reviewId = e.target.getAttribute("data-id");
+  const currentRating = block.querySelector(".rating").textContent;
+  const currentReview = block.querySelector(".review-text").textContent;
+  const bookInfo = block.querySelector("p")?.textContent || "";
+  
+  block.innerHTML = `
+    <label>Rating:
+      <input type="number" min="1" max="5" value="${currentRating}" class="edit-rating" />
+    </label>
+    <label>Review:
+      <textarea class="edit-review">${currentReview}</textarea>
+    </label>
+    <button class="save-review-btn" data-id="${reviewId}">Save</button>
+  `;
+
+  block.querySelector(".save-review-btn").addEventListener("click", async () => {
+    const newRating = block.querySelector(".edit-rating").value;
+    const newReview = block.querySelector(".edit-review").value;
+
+    try {
+      const res = await fetch("/review", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          review_id: reviewId,
+          rating: newRating,
+          review_text: newReview
+        })
+      });
+
+      const result = await res.json();
+      console.log("Update response:", result);
+
+      if (res.ok) {
+        block.innerHTML = `
+          <p><strong>Book:</strong> ${bookInfo.split(":")[1].trim()}</p>
+          <p><strong>Rating:</strong> <span class="rating">${newRating}</span></p>
+          <p><strong>Review:</strong> <span class="review-text">${newReview}</span></p>
+          <p><em>Updated just now</em></p>
+          <button class="edit-review-btn" data-id="${reviewId}">Edit</button>
+          <button class="delete-review-btn" data-id="${reviewId}">Delete</button>
+        `;
+        block.querySelector(".edit-review-btn").addEventListener("click", handleEditReview);
+        block.querySelector(".delete-review-btn").addEventListener("click", handleDeleteReview);
+      } else {
+        alert(result.message || "User not authorized to update this review.");
+      }
+    } catch (err) {
+      console.error("Update review failed:", err);
+      alert("Error updating review.");
+    }
+  });
+}
+
+function handleDeleteReview(e) {
+  const reviewId = e.target.getAttribute("data-id");
+
+  fetch("/review", {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ review_id: reviewId })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.id) {
+        e.target.closest(".review-block").remove();
+      } else {
+        alert(data.message || "User not authorized to delete this review.");
+      }
+    })
+    .catch(() => alert("Error deleting review."));
+}

@@ -162,15 +162,17 @@ const updateReview = async (req, res) => {
         return res.status(401).json({ message: 'Unauthorized. Please log in.' });
     }
 
-    const { review_id, new_rating, new_review } = req.body;
+    const { review_id, rating, review_text } = req.body;
 
-    if (!review_id || !new_rating || !new_review) {
+    console.log("Incoming update:", { review_id, rating, review_text });
+
+    if (!review_id || !rating || !review_text) {
         return res.status(400).json({ message: 'Review ID, new rating, and new review content are required.' });
     }
 
     try {
         await checkReviewOwnership(review_id, req.session.user.id);
-        const result = await updateReviewQuery(review_id, new_rating, new_review);
+        const result = await updateReviewQuery(review_id, rating, review_text);
         res.status(200).json(result);
     } catch (error) {
         res.status(error.message === 'Review not found.' ? 404 : 403).json({ message: error.message });
